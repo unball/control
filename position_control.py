@@ -9,14 +9,11 @@ from math import fabs
 from math import sqrt
 
 #Control constants
-Kp_lin = [2, 1, 2]
+Kp_lin = [0, 0, 0]
 Ki_lin = [0, 0, 0]
 
-Kp_ang = [1, 1, 1]
-Ki_ang  = [1, 1, 1]
-
-Kp_ang = [k * -1 for k in Kp_ang] #nao mexe aqui
-Ki_ang = [k * -1 for k in Ki_ang]
+Kp_ang = [0, 0, 0]
+Ki_ang  = [0, 0, 0]
 
 
 number_of_robots = 3
@@ -46,16 +43,13 @@ def calculate_robot_speeds(vector):
 		distance = saturation(distance)
 		dTh = calculateErrorAngle(vector.y[robot], vector.x[robot])
 
-		if changed_quadrant(dTh):
-			angular_controller[robot].reset_error_i()
 
-		speeds.linear_vel[robot] = 0#linear_controller[robot].control(distance)
-		speeds.angular_vel[robot] = 0#angular_controller[robot].control(dTh)
+		speeds.linear_vel[robot] = linear_controller[robot].control(distance)
+		speeds.angular_vel[robot] = angular_controller[robot].control(dTh)
 
 		prev_dTh[robot] = dTh
 
-def changed_quadrant(angle):
-	return quadrant(angle) != quadrant(prev_dTh)
+
 
 def quadrant(angle):
 	if angle >= 0 and angle <= pi/2:
