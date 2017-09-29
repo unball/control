@@ -20,12 +20,6 @@ number_of_robots = 3
 linear_controller = []
 angular_controller = []
 
-distance_to_saturate = 0.3 #in meters
-def saturation(distance):
-	if distance > distance_to_saturate:
-		return distance_to_saturate
-	else:
-		return distance
 
 def calculateErrorAngle(y, x):
 	if x==0 and y==0:
@@ -40,9 +34,7 @@ def calculate_robot_speeds(vector):
 
 	for robot in range(number_of_robots):
 		distance = vector.y[robot] #could use the magnitude of the vector. it's a different behaviour, though
-		distance = saturation(distance)
 		dTh = calculateErrorAngle(vector.y[robot], vector.x[robot])
-
 
 		speeds.linear_vel[robot] = linear_controller[robot].control(distance)
 		speeds.angular_vel[robot] = angular_controller[robot].control(dTh)
