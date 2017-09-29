@@ -9,49 +9,61 @@ from math import fabs
 from math import sqrt
 
 #Control constants
-Kp_lin = [0, 0, 0]
+Kp_lin = [1, 1, 1]
 Ki_lin = [0, 0, 0]
 
-Kp_ang = [0, 0, 0]
+Kp_ang = [1, 1, 1]
 Ki_ang  = [0, 0, 0]
 
+wheel_reduction = 3/ 1 #motor -> wheel
+r = 0.035 #wheel radius in m
+L = 0.075 #distance between wheels in m
+
+max_tics_per_s = 70000. #equivalent to 700 tics/10ms
+encoder_resolution = 512.*19
+max_motor_speed = (max_tics_per_s) / encoder_resolution
+max_wheels_speed=max_motor_speed*2*pi/wheel_reduction
 
 number_of_robots = 3
 linear_controller = []
 angular_controller = []
 
-
 def calculateErrorAngle(y, x):
 	if x==0 and y==0:
 		return 0
-
 	th = atan2(-x, y)
-	print th
 	return (th)
 
 prev_dTh = [0.0, 0.0, 0.0]
-def calculate_robot_speeds(vector):
 
+def saturate(u,w):
+	w1=(2*u + L*w)/(2*r)
+	w2=(2*u - L*w)/(2*r)
+
+	if (w1 > max_wheels_speed) or (w2 > max_wheels_speed):
+		if fabs(w1) >= fabs(w2):
+			w2 = max_wheels_speed * w2/fabs(w1)
+			w1 = max_wheels_speed * w1/fabs(w1)
+		elif fabs(w2) >= fabs(w1):
+			w1 = max_wheels_speed * w1/fabs(w2)
+			w2 = max_wheels_speed * w2/fabs(w2)
+
+	u = r*(w1+w2)/2
+	w = r*(w1-w2)/L
+	return u,w
+
+def calculate_robot_speeds(vector):
 	for robot in range(number_of_robots):
 		distance = vector.y[robot] #could use the magnitude of the vector. it's a different behaviour, though
 		dTh = calculateErrorAngle(vector.y[robot], vector.x[robot])
 
 		speeds.linear_vel[robot] = linear_controller[robot].control(distance)
 		speeds.angular_vel[robot] = angular_controller[robot].control(dTh)
-
 		prev_dTh[robot] = dTh
 
+		speeds.linear_vel[robot],speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
 
-
-def quadrant(angle):
-	if angle >= 0 and angle <= pi/2:
-		return 1
-	elif angle > pi/2 and angle <= pi:
-		return 2
-	elif angle < 0 and angle >= -90:
-		return 3
-	elif angle < -pi/2 and angle > -pi:
-		return 4
+		print speeds
 
 def robot_speed_control_node():
 	print '[PositionControl]robot_speed_control_node: begin'
