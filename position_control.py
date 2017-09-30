@@ -49,17 +49,18 @@ def saturate(u,w):
 	w = r*(w1-w2)/L
 	return u,w
 
-def control(error_linear, error_angular):
+def control(error_magnitude, error_angle):
 	k_linear=1
 	k_angular=10
-	return k_linear*error_linear, k_angular*error_angular
+	return k_linear*error_magnitude, k_angular*error_angle
 
 def calculate_robot_speeds(vector):
 	for robot in range(number_of_robots):
-		distance = sqrt(vector.y[robot]**2+vector.x[robot]**2)
-		dTh = calculateErrorAngle(vector.y[robot], vector.x[robot])
+		#this two lines make the transformation of cartesian to polar coordinates of the error vector
+		error_magnitude = sqrt(vector.y[robot]**2+vector.x[robot]**2)
+		error_angle = calculateErrorAngle(vector.y[robot], vector.x[robot])
 
-		speeds.linear_vel[robot],speeds.angular_vel[robot] = control(distance, dTh)
+		speeds.linear_vel[robot],speeds.angular_vel[robot] = control(error_magnitude, error_angle)
 		speeds.linear_vel[robot],speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
 
 		print speeds
