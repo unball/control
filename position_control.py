@@ -34,7 +34,6 @@ def calculateErrorAngle(y, x):
 	th = atan2(-x, y)
 	return (th)
 
-prev_dTh = [0.0, 0.0, 0.0]
 
 def saturate(u,w):
 	w1=(2*u + L*w)/(2*r)
@@ -52,25 +51,31 @@ def saturate(u,w):
 	w = r*(w1-w2)/L
 	return u,w
 
+def control(error_linear, error_angular):
+	k_linear=1
+	k_angular=10
+	return k_linear*error_linear, k_angular*error_angular
+
 def calculate_robot_speeds(vector):
 	for robot in range(number_of_robots):
-		distance = vector.y[robot] #could use the magnitude of the vector. it's a different behaviour, though
+		distance = sqrt(vector.y[robot]**2+vector.x[robot]**2)
 		dTh = calculateErrorAngle(vector.y[robot], vector.x[robot])
 
-		speeds.linear_vel[robot] = linear_controller[robot].control(distance)
-		speeds.angular_vel[robot] = angular_controller[robot].control(dTh)
-		prev_dTh[robot] = dTh
+		#speeds.linear_vel[robot] = linear_controller[robot].control(distance)
+		#speeds.angular_vel[robot] = angular_controller[robot].control(dTh)
 
+		speeds.linear_vel[robot],speeds.angular_vel[robot] = control(distance, dTh)
 		speeds.linear_vel[robot],speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
 
 		print speeds
+		
 
 def robot_speed_control_node():
 	print '[PositionControl]robot_speed_control_node: begin'
 
-	for i in range(3):
-		linear_controller.append( PID(Kp = Kp_lin[i], Ki = Ki_lin[i]) )
-		angular_controller.append( PID(Kp = Kp_ang[i], Ki = Ki_ang[i]) )
+	#for i in range(3):
+	#	linear_controller.append( PID(Kp = Kp_lin[i], Ki = Ki_lin[i]) )
+	#	angular_controller.append( PID(Kp = Kp_ang[i], Ki = Ki_ang[i]) )
 
 	global speeds
 	speeds = robots_speeds_msg()
