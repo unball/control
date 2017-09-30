@@ -25,8 +25,6 @@ max_motor_speed = (max_tics_per_s) / encoder_resolution
 max_wheels_speed=max_motor_speed*2*pi/wheel_reduction
 
 number_of_robots = 3
-linear_controller = []
-angular_controller = []
 
 def calculateErrorAngle(y, x):
 	if x==0 and y==0:
@@ -61,9 +59,6 @@ def calculate_robot_speeds(vector):
 		distance = sqrt(vector.y[robot]**2+vector.x[robot]**2)
 		dTh = calculateErrorAngle(vector.y[robot], vector.x[robot])
 
-		#speeds.linear_vel[robot] = linear_controller[robot].control(distance)
-		#speeds.angular_vel[robot] = angular_controller[robot].control(dTh)
-
 		speeds.linear_vel[robot],speeds.angular_vel[robot] = control(distance, dTh)
 		speeds.linear_vel[robot],speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
 
@@ -72,10 +67,6 @@ def calculate_robot_speeds(vector):
 
 def robot_speed_control_node():
 	print '[PositionControl]robot_speed_control_node: begin'
-
-	#for i in range(3):
-	#	linear_controller.append( PID(Kp = Kp_lin[i], Ki = Ki_lin[i]) )
-	#	angular_controller.append( PID(Kp = Kp_ang[i], Ki = Ki_ang[i]) )
 
 	global speeds
 	speeds = robots_speeds_msg()
