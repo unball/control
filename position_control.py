@@ -7,12 +7,7 @@ from math import pi
 from math import fabs
 from math import sqrt
 
-#Control constants
-Kp_lin = [1, 1, 1]
-Ki_lin = [0, 0, 0]
 
-Kp_ang = [1, 1, 1]
-Ki_ang  = [0, 0, 0]
 
 wheel_reduction = 3/ 1 #motor -> wheel
 r = 0.035 #wheel radius in m
@@ -36,7 +31,8 @@ def saturate(u,w):
 	w1=(2*u + L*w)/(2*r)
 	w2=(2*u - L*w)/(2*r)
 
-	if (w1 > max_wheels_speed) or (w2 > max_wheels_speed):
+	if (fabs(w1) > max_wheels_speed) or (fabs(w2) > max_wheels_speed):
+		print ('aa')
 		if fabs(w1) >= fabs(w2):
 			w2 = max_wheels_speed * w2/fabs(w1)
 			w1 = max_wheels_speed * w1/fabs(w1)
@@ -50,7 +46,7 @@ def saturate(u,w):
 
 def control(error_magnitude, error_angle):
 	k_linear=1
-	k_angular=10
+	k_angular=1
 	return k_linear*error_magnitude, k_angular*error_angle
 
 def calculate_robot_speeds(vector):
@@ -60,7 +56,7 @@ def calculate_robot_speeds(vector):
 		error_angle = calculateErrorAngle(vector.y[robot], vector.x[robot])
 
 		speeds.linear_vel[robot],speeds.angular_vel[robot] = control(error_magnitude, error_angle)
-		speeds.linear_vel[robot],speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
+		#speeds.linear_vel[robot],speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
 
 		print speeds
 
