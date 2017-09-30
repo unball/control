@@ -1,5 +1,4 @@
 import rospy
-from PID import *
 from communication.msg import target_positions_msg
 from communication.msg import robots_speeds_msg
 from math import isnan
@@ -64,7 +63,7 @@ def calculate_robot_speeds(vector):
 		speeds.linear_vel[robot],speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
 
 		print speeds
-		
+
 
 def robot_speed_control_node():
 	print '[PositionControl]robot_speed_control_node: begin'
