@@ -28,8 +28,8 @@ def normalize(w1, w2):
 #Returns the speed the MOTOR will have to spin in degree/s
 def processPosition(robot_speed):
 	for robot in range(number_of_robots):
-		wheel_radian1 = (robot_speed.linear_vel[robot] - (L/2)*robot_speed.angular_vel[robot]) / r
-		wheel_radian2 = (robot_speed.linear_vel[robot] + (L/2)*robot_speed.angular_vel[robot]) / r
+		wheel_radian1 = (-robot_speed.linear_vel[robot] + (L/2)*robot_speed.angular_vel[robot]) / r
+		wheel_radian2 = (-robot_speed.linear_vel[robot] - (L/2)*robot_speed.angular_vel[robot]) / r
 		wheel_rotations1 = wheel_radian1 / (2 * pi)
 		wheel_rotations2 = wheel_radian2 / (2 * pi)
 		motor_rotations1 = wheel_rotations1 * wheel_reduction
