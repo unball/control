@@ -8,12 +8,15 @@ from math import *
 
 def control_system_type(data):
 	print data.flag
+	speeds.linear_vel[0]=1
+	pub.publish(speeds)
 
 
 def main():
 	print 'control_system node started'
 
 	global speeds
+	global pub
 	speeds = robots_speeds_msg()
 
 	rospy.init_node('control_system_node')
