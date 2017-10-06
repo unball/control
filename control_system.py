@@ -7,7 +7,7 @@ from math import *
 
 
 def control_system_type(data):
-	print data.flag
+	print data.flag[0]
 	speeds.linear_vel[0]=1
 	pub.publish(speeds)
 
