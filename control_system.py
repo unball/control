@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import rospy
 from strategy.msg import strategy_output_msg
 from communication.msg import robots_speeds_msg
