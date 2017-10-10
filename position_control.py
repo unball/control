@@ -11,8 +11,8 @@ def calculateErrorAngle(y, x):
 	return (th)
 
 def control(error_magnitude, error_angle, vector_y):
-	k_linear=0.3
-	k_angular=1
+	k_linear=1
+	k_angular=2
 	return k_linear*error_magnitude, k_angular*error_angle
 
 def position_control(vector):

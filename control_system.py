@@ -16,6 +16,8 @@ def control_system_type(data):
 		relative_target = convertTargetPositions(data.x[0],data.y[0], data.th[0],
 												 allies_x[0], allies_y[0], allies_th[0])
 		speeds.linear_vel[0], speeds.angular_vel[0] = position_control(relative_target)
+		speeds.linear_vel[0], speeds.angular_vel[0] = saturate(speeds.linear_vel[0],speeds.angular_vel[0])
+
 		pub.publish(speeds)
 
 def saturate(u,w):
@@ -32,7 +34,6 @@ def saturate(u,w):
 	w2=(2*u - L*w)/(2*r)
 
 	if (fabs(w1) > max_wheels_speed) or (fabs(w2) > max_wheels_speed):
-		print ('aa')
 		if fabs(w1) >= fabs(w2):
 			w2 = max_wheels_speed * w2/fabs(w1)
 			w1 = max_wheels_speed * w1/fabs(w1)
