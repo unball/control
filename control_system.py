@@ -7,18 +7,28 @@ from measurement_system.msg import measurement_msg
 import math
 from control_options import *
 from position_control import *
+from pose_control import *
 
 number_of_robots = 3
 
 
 def control_system_type(data):
-	if data.control_options[0] == control_options.position:
-		relative_target = convertTargetPositions(data.x[0],data.y[0], data.th[0],
-												 allies_x[0], allies_y[0], allies_th[0])
-		speeds.linear_vel[0], speeds.angular_vel[0] = position_control(relative_target)
-		speeds.linear_vel[0], speeds.angular_vel[0] = saturate(speeds.linear_vel[0],speeds.angular_vel[0])
 
-		pub.publish(speeds)
+	for robot in range(number_of_robots):
+		relative_target = convertTargetPositions(data.x[robot],data.y[robot], allies_x[robot], allies_y[robot], allies_th[robot]);
+		if data.control_options[robot] ==  control_options.position:
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = position_control(relative_target)	
+		if data.control_options[robot] == control_options.pose:
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_control(relative_target, data.th[robot], allies_th[robot])
+
+
+	#if data.control_options[0] == control_options.position:
+	#	relative_target = convertTargetPositions(data.x[0],data.y[0], data.th[0],
+	#											 allies_x[0], allies_y[0], allies_th[0])
+	#	speeds.linear_vel[0], speeds.angular_vel[0] = position_control(relative_target)
+	#	speeds.linear_vel[0], speeds.angular_vel[0] = saturate(speeds.linear_vel[0],speeds.angular_vel[0])
+
+	pub.publish(speeds)
 
 def saturate(u,w):
 	wheel_reduction = 3/ 1 #motor -> wheel
@@ -45,7 +55,7 @@ def saturate(u,w):
 	w = r*(w1-w2)/L
 	return u,w
 
-def convertTargetPositions(target_x, target_y, target_th, robot_x, robot_y, robot_th):
+def convertTargetPositions(target_x, target_y, robot_x, robot_y, robot_th):
     relative_target = [target_x - robot_x, target_y - robot_y]
     relative_target = convert_axis_to_robot(relative_target, robot_th)
     return relative_target
