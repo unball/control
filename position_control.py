@@ -4,21 +4,28 @@ from communication.msg import robots_speeds_msg
 from math import *
 number_of_robots = 3
 
-def calculateErrorAngle(y, x):
+def calculateErrorAngle(y, x, orientation):
 	if x==0 and y==0:
 		return 0
-	th = atan2(-x, y)
+
+	if orientation == 1:
+		th = atan2(-x, y)
+
+	else:
+		th = atan2(x, -y)
+
 	return (th)
 
 def position_control(vector):
 		#this two lines make the transformation of cartesian to polar coordinates of the error vector
+		orientation = vector[1]/abs(vector[1])
 		error_magnitude = sqrt(vector[1]**2+vector[0]**2)
-		error_angle = calculateErrorAngle(vector[1], vector[0])
-
+		error_angle = calculateErrorAngle(vector[1], vector[0], orientation)
+		
 		#k_linear=1
 		#k_angular=2
 		angulosity = 0.8;
-		k_linear, k_angular = 1-angulosity, angulosity;
+		k_linear, k_angular = orientation*(1-angulosity), angulosity;
 		radius_tolerance = 0.1
 		if error_magnitude > radius_tolerance:
 			#return k_linear*error_magnitude, k_angular*error_angle
