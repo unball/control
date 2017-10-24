@@ -17,9 +17,11 @@ def control_system_type(data):
 	for robot in range(number_of_robots):
 		relative_target = convertTargetPositions(data.x[robot],data.y[robot], allies_x[robot], allies_y[robot], allies_th[robot]);
 		if data.control_options[robot] ==  control_options.position:
-			speeds.linear_vel[robot], speeds.angular_vel[robot] = position_control(relative_target)	
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = position_control(relative_target)
 		if data.control_options[robot] == control_options.pose:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_control(relative_target, data.th[robot], allies_th[robot])
+		if data.control_options[robot] == control_options.direct_speeds:
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = saturate(data.u[robot], data.w[robot])
 
 
 	#if data.control_options[0] == control_options.position:
@@ -73,6 +75,7 @@ def convert_axis_to_robot(vector, th):
 allies_x = [0, 0, 0]
 allies_y = [0, 0, 0]
 allies_th = [0, 0, 0]
+
 
 def receiveGlobalPositions(data):
     for robot in range(number_of_robots):

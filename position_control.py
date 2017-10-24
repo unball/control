@@ -26,7 +26,7 @@ def position_control(vector):
 		#k_angular=2
 		angulosity = 0.8;
 		k_linear, k_angular = orientation*(1-angulosity), angulosity;
-		radius_tolerance = 0.1
+		radius_tolerance = 0
 		if error_magnitude > radius_tolerance:
 			#return k_linear*error_magnitude, k_angular*error_angle
 			return scale_velocity(k_linear*error_magnitude, k_angular*error_angle, 0.5)
