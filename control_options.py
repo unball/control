@@ -4,3 +4,4 @@ class control_options:
     momentum = 3
     angular_pose= 4
     direct_speeds = 5
+    pose_line = 6

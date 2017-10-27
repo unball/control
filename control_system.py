@@ -8,6 +8,7 @@ import math
 from control_options import *
 from position_control import *
 from pose_control import *
+from pose_line_control import *
 
 number_of_robots = 3
 
@@ -20,7 +21,8 @@ def control_system_type(data):
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = position_control(relative_target)	
 		if data.control_options[robot] == control_options.pose:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_control(relative_target, data.th[robot], allies_th[robot])
-
+		if data.control_options[robot] == control_options.pose_line:
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_line_control(relative_target, data.th[robot], allies_th[robot])
 
 	#if data.control_options[0] == control_options.position:
 	#	relative_target = convertTargetPositions(data.x[0],data.y[0], data.th[0],
