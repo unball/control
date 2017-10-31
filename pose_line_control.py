@@ -20,7 +20,7 @@ def calculateErrorAngle(y, x, orientation):
 def angdiff(robot_angle,desired_angle):
 	#Difference between two angles, the result wrapped on the interval [-pi,pi].
 	return ((robot_angle - desired_angle + pi/2) % (pi)) - pi/2
-	
+
 
 
 
@@ -36,11 +36,11 @@ def pose_line_control(vector, robot_angle, desired_angle):
 		k_linear, k_angular = 1-angulosity, angulosity;
 
 		k_linear=k_linear
-		k_angular=-k_angular
+		k_angular=k_angular
 		radius_tolerance = 0.1
 		if error_magnitude > radius_tolerance:
 			#return k_linear*error_magnitude, k_angular*error_angle
-			return scale_velocity(sign*k_linear*error_magnitude, -k_angular*error_angle, 0.5)
+			return scale_velocity(sign*k_linear*error_magnitude, k_angular*error_angle, 0.5)
 		else:
 			k_angular=2
 		return 0, k_angular*angdiff(robot_angle, desired_angle)
