@@ -49,7 +49,7 @@ def differential_model_node():
 	rospy.init_node('differential_model', anonymous=True)
 	rate = rospy.Rate(10)
 
-	pub = rospy.Publisher('wheels_speed', wheels_speeds_msg, queue_size=10)
+	pub = rospy.Publisher('wheels_speed', wheels_speeds_msg, queue_size=1)
 	rospy.Subscriber('robots_speeds', robots_speeds_msg, processPosition)
 
 	while not rospy.is_shutdown():

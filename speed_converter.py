@@ -19,7 +19,7 @@ def publishSpeeds(wheels_speed):
 
 def publisher():
     global msg
-    pub = rospy.Publisher('radio_topic', comm_msg, queue_size=10)
+    pub = rospy.Publisher('radio_topic', comm_msg, queue_size=1)
     rospy.init_node('speed_converter', anonymous=True)
     rate = rospy.Rate(10)
     rospy.Subscriber('wheels_speed', wheels_speeds_msg, publishSpeeds)
