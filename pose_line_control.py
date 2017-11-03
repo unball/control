@@ -20,16 +20,36 @@ def calculateErrorAngle(y, x, orientation):
 def angdiff(robot_angle,desired_angle):
 	#Difference between two angles, the result wrapped on the interval [-pi,pi].
 	return ((robot_angle - desired_angle + pi/2) % (pi)) - pi/2
+def purple_curve(x):
+	return x/(1+fabs(x))
 
-
-
+m_v_linear = 0.0
+m_v_angular = 0.0
 
 def pose_line_control(vector, robot_angle, desired_angle):
 		#this two lines make the transformation of cartesian to polar coordinates of the error vector
 		error_magnitude = sqrt(vector[1]**2+vector[0]**2)
-		sign = vector[1]/fabs(vector[1])
+		#sign = vector[1]/fabs(vector[1])
+		sign = copysign(1,vector[1])
 		error_angle = calculateErrorAngle(vector[1], vector[0], sign)
 
+
+		k_linear = purple_curve(error_magnitude*5)
+		k_angular = purple_curve(error_angle*0.1)
+
+		v_linear = sign*k_linear*0.5
+		v_angular = k_angular*14
+
+		alpha_ang=0.3
+		alpha_lin=0.2
+		global m_v_angular
+		global m_v_linear
+		m_v_angular = (1-alpha_ang)*v_angular + alpha_ang*m_v_angular
+		m_v_linear = (1-alpha_lin)*v_linear + alpha_lin*m_v_linear 
+
+		return m_v_linear, m_v_angular
+
+		'''
 		#k_linear=1
 		#k_angular=2
 		angulosity = 0.8;
@@ -44,8 +64,8 @@ def pose_line_control(vector, robot_angle, desired_angle):
 		else:
 			k_angular=2
 		return 0, k_angular*angdiff(robot_angle, desired_angle)
-
-
+		'''
+	
 def scale_velocity(u,w,k):
 	wheel_reduction = 3/ 1 #motor -> wheel
 	r = 0.035 #wheel radius in m

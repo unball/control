@@ -10,21 +10,42 @@ def calculateErrorAngle(y, x):
 	th = atan2(-x, y)
 	return (th)
 
+def purple_curve(x):
+	return x/(1+fabs(x))
+
+
+m_v_linear = 0.0
+m_v_angular = 0.0
+
 def position_control(vector):
 		#this two lines make the transformation of cartesian to polar coordinates of the error vector
 		error_magnitude = sqrt(vector[1]**2+vector[0]**2)
 		error_angle = calculateErrorAngle(vector[1], vector[0])
 
+		k_linear = purple_curve(error_magnitude*8)
+		k_angular = purple_curve(error_angle*0.4)
+
+		v_linear = k_linear*0.5
+		v_angular = k_angular*14
+
+		alpha_ang=0.3
+		alpha_lin=0.2
+		global m_v_angular
+		global m_v_linear
+		m_v_angular = (1-alpha_ang)*v_angular + alpha_ang*m_v_angular
+		m_v_linear = (1-alpha_lin)*v_linear + alpha_lin*m_v_linear 
+
+		return m_v_linear, m_v_angular
 		#k_linear=1
 		#k_angular=2
-		angulosity = 0.8;
-		k_linear, k_angular = 1-angulosity, angulosity;
-		radius_tolerance = 0.1
-		if error_magnitude > radius_tolerance:
+		#angulosity = 0.8;
+		#k_linear, k_angular = 1-angulosity, angulosity;
+		#radius_tolerance = 0.1
+		#if error_magnitude > radius_tolerance:
 			#return k_linear*error_magnitude, k_angular*error_angle
-			return scale_velocity(k_linear*error_magnitude, k_angular*error_angle, 0.5)
-		else:
-			return 0,0
+		#	return scale_velocity(k_linear*error_magnitude, k_angular*error_angle, 0.5)
+		#else:
+		#	return 0,0
 
 
 def scale_velocity(u,w,k):
