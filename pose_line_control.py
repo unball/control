@@ -40,15 +40,21 @@ def pose_line_control(vector, robot_angle, desired_angle):
 		v_linear = sign*k_linear*0.5
 		v_angular = k_angular*14
 
-		alpha_ang=0.3
-		alpha_lin=0.2
+		alpha_ang=0.1
+		alpha_lin=0.1
 		global m_v_angular
 		global m_v_linear
 		m_v_angular = (1-alpha_ang)*v_angular + alpha_ang*m_v_angular
 		m_v_linear = (1-alpha_lin)*v_linear + alpha_lin*m_v_linear 
 
-		return m_v_linear, m_v_angular
-
+		radius_tolerance = 0.1
+		if error_magnitude > radius_tolerance:
+			#return k_linear*error_magnitude, k_angular*error_angle
+			return m_v_linear, m_v_angular
+			#return scale_velocity(sign*k_linear*error_magnitude, k_angular*error_angle, 0.5)
+		else:
+			k_angular=2
+		return 0, k_angular*angdiff(robot_angle, desired_angle)
 		'''
 		#k_linear=1
 		#k_angular=2
@@ -57,13 +63,6 @@ def pose_line_control(vector, robot_angle, desired_angle):
 
 		k_linear=k_linear
 		k_angular=k_angular
-		radius_tolerance = 0.1
-		if error_magnitude > radius_tolerance:
-			#return k_linear*error_magnitude, k_angular*error_angle
-			return scale_velocity(sign*k_linear*error_magnitude, k_angular*error_angle, 0.5)
-		else:
-			k_angular=2
-		return 0, k_angular*angdiff(robot_angle, desired_angle)
 		'''
 	
 def scale_velocity(u,w,k):
