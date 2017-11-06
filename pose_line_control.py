@@ -11,7 +11,6 @@ def calculateErrorAngle(y, x, orientation):
 
 	if orientation == 1:
 		th = atan2(-x, y)
-
 	else:
 		th = atan2(x, -y)
 
@@ -32,7 +31,6 @@ def pose_line_control(vector, robot_angle, desired_angle):
 		#sign = vector[1]/fabs(vector[1])
 		sign = copysign(1,vector[1])
 		error_angle = calculateErrorAngle(vector[1], vector[0], sign)
-
 
 		k_linear = purple_curve(error_magnitude*8)
 		k_angular = purple_curve(error_angle*0.3)
@@ -56,15 +54,6 @@ def pose_line_control(vector, robot_angle, desired_angle):
 		else:
 			k_angular=2
 		return 0, 14  #k_angular*angdiff(robot_angle, desired_angle)
-		'''
-		#k_linear=1
-		#k_angular=2
-		angulosity = 0.8;
-		k_linear, k_angular = 1-angulosity, angulosity;
-
-		k_linear=k_linear
-		k_angular=k_angular
-		'''
 
 def scale_velocity(u,w,k):
 	wheel_reduction = 3/ 1 #motor -> wheel

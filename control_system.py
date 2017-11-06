@@ -12,7 +12,6 @@ from pose_line_control import *
 
 number_of_robots = 3
 
-
 def control_system_type(data):
 
 	for robot in range(number_of_robots):
@@ -27,7 +26,6 @@ def control_system_type(data):
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = data.u[robot], data.w[robot]
 
 		speeds.linear_vel[robot], speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
-
 	pub.publish(speeds)
 
 def saturate(u,w):
