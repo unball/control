@@ -34,8 +34,8 @@ def pose_line_control(vector, robot_angle, desired_angle):
 		error_angle = calculateErrorAngle(vector[1], vector[0], sign)
 
 
-		k_linear = purple_curve(error_magnitude*5)
-		k_angular = purple_curve(error_angle*0.1)
+		k_linear = purple_curve(error_magnitude*8)
+		k_angular = purple_curve(error_angle*0.3)
 
 		v_linear = sign*k_linear*0.5
 		v_angular = k_angular*14
@@ -45,7 +45,8 @@ def pose_line_control(vector, robot_angle, desired_angle):
 		global m_v_angular
 		global m_v_linear
 		m_v_angular = (1-alpha_ang)*v_angular + alpha_ang*m_v_angular
-		m_v_linear = (1-alpha_lin)*v_linear + alpha_lin*m_v_linear 
+		m_v_linear = (1-alpha_lin)*v_linear + alpha_lin*m_v_linear
+
 
 		radius_tolerance = 0.1
 		if error_magnitude > radius_tolerance:
@@ -54,7 +55,7 @@ def pose_line_control(vector, robot_angle, desired_angle):
 			#return scale_velocity(sign*k_linear*error_magnitude, k_angular*error_angle, 0.5)
 		else:
 			k_angular=2
-		return 0, k_angular*angdiff(robot_angle, desired_angle)
+		return 0, 14  #k_angular*angdiff(robot_angle, desired_angle)
 		'''
 		#k_linear=1
 		#k_angular=2
@@ -64,7 +65,7 @@ def pose_line_control(vector, robot_angle, desired_angle):
 		k_linear=k_linear
 		k_angular=k_angular
 		'''
-	
+
 def scale_velocity(u,w,k):
 	wheel_reduction = 3/ 1 #motor -> wheel
 	r = 0.035 #wheel radius in m
