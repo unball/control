@@ -9,6 +9,7 @@ from control_options import *
 from position_control import *
 from pose_control import *
 from pose_line_control import *
+from angular_pose import *
 
 number_of_robots = 3
 
@@ -24,6 +25,9 @@ def control_system_type(data):
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_line_control(relative_target, data.th[robot], allies_th[robot])
 		if data.control_options[robot] == control_options.direct_speeds:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = data.u[robot], data.w[robot]
+		if data.control_options[robot] == control_options.angular_pose:
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = angular_pose(data.th[robot], allies_th[robot])
+
 
 		speeds.linear_vel[robot], speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
 	pub.publish(speeds)
