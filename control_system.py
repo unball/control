@@ -28,9 +28,7 @@ def control_system_type(data):
 		if data.control_options[robot] == control_options.angular_pose:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = angular_pose(data.th[robot], allies_th[robot])
 
-
 		speeds.linear_vel[robot], speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
-	pub.publish(speeds)
 
 def saturate(u,w):
 	wheel_reduction = 3/ 1 #motor -> wheel
@@ -81,18 +79,24 @@ def receiveGlobalPositions(data):
         allies_x[robot] = data.x[robot]
         allies_y[robot] = data.y[robot]
         allies_th[robot] = data.th[robot]
+
 def main():
-	print 'control_system node started'
+    print 'control_system node started'
 
-	global speeds
-	global pub
-	speeds = robots_speeds_msg()
+    global speeds
+    speeds = robots_speeds_msg()
 
-	rospy.init_node('control_system_node')
-	pub = rospy.Publisher('robots_speeds', robots_speeds_msg, queue_size=10)
-	rospy.Subscriber('strategy_output_topic', strategy_output_msg, control_system_type)
-	rospy.Subscriber('measurement_system_topic', measurement_msg, receiveGlobalPositions)
-	rospy.spin()
+    rospy.init_node('control_system_node')
+    pub = rospy.Publisher('robots_speeds', robots_speeds_msg, queue_size=1)
+    rospy.Subscriber('strategy_output_topic', strategy_output_msg, control_system_type)
+    rospy.Subscriber('measurement_system_topic', measurement_msg, receiveGlobalPositions)
+    rate = rospy.Rate(30)	
+    try:
+        while not rospy.is_shutdown():
+            pub.publish(speeds)
+            rate.sleep()
+    except rospy.ROSInterruptException:
+        exit(1)
 
 
 if __name__ == '__main__':
