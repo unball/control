@@ -11,7 +11,9 @@ def pose_line_control(vector, robot_angle, desired_angle):
 	global m_v_angular
 	global m_v_linear
 
-	orientation = copysign(1,vector[1])
+	schmitt_trigger = 0.4
+
+	orientation = copysign(1, vector[1] + schmitt_trigger)
 
 	m_v_linear, m_v_angular = purple_curve_control(vector, orientation, m_v_angular, m_v_linear, robot_angle, desired_angle)
 
