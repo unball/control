@@ -12,9 +12,13 @@ def calculateErrorAngle(y, x, orientation):
 
  	return (th)
 
-def angdiff(robot_angle,desired_angle):
+def angdiff_180(robot_angle,desired_angle):
 	#Difference between two angles, the result wrapped on the interval [-pi,pi].
 	return ((robot_angle - desired_angle + pi/2) % (pi)) - pi/2
+
+def angdiff(robot_angle,desired_angle):
+	#Difference between two angles, the result wrapped on the interval [-pi,pi].
+	return ((robot_angle - desired_angle + pi) % (2*pi)) - pi
 
 def purple_curve(x):
 	return x/(1+fabs(x))
@@ -66,4 +70,3 @@ def purple_curve_control(vector, orientation,m_v_angular,m_v_linear,robot_angle=
 	output_linear = (1-alpha_lin)*v_linear + alpha_lin*m_v_linear 
 
 	return output_linear, output_angular
-	
