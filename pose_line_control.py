@@ -16,7 +16,7 @@ def pose_line_control(vector, robot_angle, desired_angle):
 	if orientation == 1:
 		orientation = copysign(1,vector[1] + 0.1)
 	else:
-		 orientation = copysign(1,vector[1] - 0.1)
+		orientation = copysign(1,vector[1] - 0.1)
 
 	m_v_linear, m_v_angular = purple_curve_control(vector, orientation, m_v_angular, m_v_linear, robot_angle, desired_angle)
 
