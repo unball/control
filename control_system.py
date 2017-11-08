@@ -10,6 +10,7 @@ from position_control import *
 from pose_control import *
 from pose_line_control import *
 from angular_pose import *
+from special_movements import *
 
 number_of_robots = 3
 
@@ -27,9 +28,11 @@ def control_system_type(data):
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = data.u[robot], data.w[robot]
 		if data.control_options[robot] == control_options.angular_pose:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = angular_pose(data.th[robot], allies_th[robot])
-
+		
 		speeds.linear_vel[robot], speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
-
+		
+		if data.control_options[robot] == control_options.special_movements:
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = special_movements(data.u[robot])
 def saturate(u,w):
 	wheel_reduction = 3/ 1 #motor -> wheel
 	r = 0.035 #wheel radius in m
