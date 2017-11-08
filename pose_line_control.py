@@ -6,12 +6,17 @@ from control_utils import *
 
 m_v_linear = 0.0
 m_v_angular = 0.0
+orientation = 1
 
 def pose_line_control(vector, robot_angle, desired_angle):
 	global m_v_angular
 	global m_v_linear
+	global orientation
 
-	orientation = copysign(1,vector[1])
+	if orientation == 1:
+		orientation = copysign(1,vector[1] + 0.1)
+	else:
+		 orientation = copysign(1,vector[1] - 0.1)
 
 	m_v_linear, m_v_angular = purple_curve_control(vector, orientation, m_v_angular, m_v_linear, robot_angle, desired_angle)
 
