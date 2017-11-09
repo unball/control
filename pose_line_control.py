@@ -13,7 +13,7 @@ def pose_line_control(vector, robot_angle, desired_angle, robot):
 	global m_v_linear
 	global orientation
 
-	margin = 50
+	margin = 80
 	margin = 2*pi*margin/360
 
 	error = calculateErrorAngle(vector[1], vector[0],1)
@@ -22,11 +22,16 @@ def pose_line_control(vector, robot_angle, desired_angle, robot):
 	elif (orientation[robot] == -1) and (fabs(error)<margin):
 		orientation[robot] = 1
 
-	m_v_linear[robot], m_v_angular[robot] = purple_curve_control(vector, orientation[robot], m_v_angular[robot], m_v_linear[robot], robot_angle, desired_angle)
+	m_v_linear[robot], m_v_angular[robot] = purple_curve_control(vector, orientation[robot], m_v_angular[robot], m_v_linear[robot], robot, robot_angle, desired_angle)
 
 	error_magnitude = sqrt(vector[1]**2+vector[0]**2)
-	radius_tolerance = 0.1
+	radius_tolerance = 0.0
+	if robot == 2:
+		radius_tolerance = 0.05
+
 	if error_magnitude > radius_tolerance:
+		if fabs(error) < pi/12:
+			m_v_angular[robot] = 0
 		return m_v_linear[robot], m_v_angular[robot]
 	else:
 		k_angular=2

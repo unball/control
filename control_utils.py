@@ -77,17 +77,21 @@ def curve_control(robot_vector,desired_vector,robot_angle, desired_angle,h):
 
 
 
-def purple_curve_control(vector, orientation,m_v_angular,m_v_linear,robot_angle=0, desired_angle=0):
+def purple_curve_control(vector, orientation,m_v_angular,m_v_linear, robot, robot_angle=0, desired_angle=0):
 	#this two lines make the transformation of cartesian to polar coordinates of the error vector
 	error_magnitude = sqrt(vector[1]**2+vector[0]**2)
 	error_angle = calculateErrorAngle(vector[1], vector[0], orientation)
 
 	scaling_linear = 0.5;
 	scaling_angular = 14;
+	k=1.5
+	k_linear = 3*k
+	k_angular = 0.3*k	
 
-	k=1.1
-	k_linear = 5*k
-	k_angular = 0.4*k	
+	if robot == 2:
+		k=1.5
+		k_linear = 3*k
+		k_angular = 0.3*k
 
 	v_linear = orientation*scaling_linear*purple_curve(error_magnitude*k_linear)
 	v_angular = k_angular*scaling_angular*purple_curve(error_angle*k_angular)
