@@ -85,14 +85,15 @@ def purple_curve_control(vector, orientation,m_v_angular,m_v_linear,robot_angle=
 	scaling_linear = 0.5;
 	scaling_angular = 14;
 
-	k_linear = 5
-	k_angular = 1
+	k=1.1
+	k_linear = 5*k
+	k_angular = 0.4*k	
 
 	v_linear = orientation*scaling_linear*purple_curve(error_magnitude*k_linear)
 	v_angular = k_angular*scaling_angular*purple_curve(error_angle*k_angular)
 
-	alpha_ang=0.1
-	alpha_lin=0.1
+	alpha_ang=0.2
+	alpha_lin=0.5
 
 	output_angular = (1-alpha_ang)*v_angular + alpha_ang*m_v_angular
 	output_linear = (1-alpha_lin)*v_linear + alpha_lin*m_v_linear 
