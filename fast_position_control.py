@@ -25,7 +25,7 @@ def fast_position_control(vector, robot):
 	elif (orientation[robot] == -1) and (fabs(error)<margin):
 		orientation[robot] = 1
 
-	m_v_linear, m_v_angular = fast_purple_curve(vector, orientation[robot], m_v_angular, m_v_linear)
+	m_v_linear, m_v_angular = fast_purple_curve(vector,1, m_v_angular, m_v_linear)
 
 	return m_v_linear,m_v_angular
 	

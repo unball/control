@@ -64,9 +64,9 @@ def fast_purple_curve(vector, orientation,m_v_angular,m_v_linear,robot_angle=0, 
 	else:
 		v_linear = orientation*scaling_linear*purple_curve(error_magnitude*k_linear)
 
-	if fabs(error_angle) > pi/4:
-		v_angular = scaling_angular*0.5
-	elif fabs(error_angle) > pi/12:
+	#if fabs(error_angle) > pi/4:
+	#	v_angular = scaling_angular*0.1
+	if fabs(error_angle) > pi/12:
 		v_angular = k_angular*scaling_angular*purple_curve(error_angle*k_angular)
 	else:
 		v_angular = 0
