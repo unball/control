@@ -20,10 +20,10 @@ def fast_position_control(vector, robot):
 
 	error = calculateErrorAngle(vector[1], vector[0],1)
 	
-	if (orientation[robot] == 1) and (fabs(error)>(pi-margin)):
-		orientation[robot] = -1
-	elif (orientation[robot] == -1) and (fabs(error)<margin):
-		orientation[robot] = 1
+	#if (orientation[robot] == 1) and (fabs(error)>(pi-margin)):
+	#	orientation[robot] = -1
+	#elif (orientation[robot] == -1) and (fabs(error)<margin):
+	#	orientation[robot] = 1
 
 	m_v_linear, m_v_angular = fast_purple_curve(vector, orientation[robot], m_v_angular, m_v_linear)
 

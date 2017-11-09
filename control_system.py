@@ -11,6 +11,7 @@ from pose_control import *
 from pose_line_control import *
 from angular_pose import *
 from special_movements import *
+from fast_position_control import *
 from curve_control import *
 
 number_of_robots = 3
@@ -23,7 +24,8 @@ def control_system_type(data):
 		if data.control_options[robot] ==  control_options.position:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = position_control(relative_target, robot)
 		elif data.control_options[robot] == control_options.pose:
-			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_control(relative_target, data.th[robot], allies_th[robot])
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = fast_position_control(relative_target, robot)
+			#speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_control(relative_target, data.th[robot], allies_th[robot])
 		elif data.control_options[robot] == control_options.pose_line:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_line_control(relative_target, data.th[robot], allies_th[robot], robot)
 		elif data.control_options[robot] == control_options.direct_speeds:
