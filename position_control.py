@@ -23,9 +23,9 @@ def position_control(vector, robot):
 		orientation[robot] = -1
 	elif (orientation[robot] == -1) and (fabs(error)<margin):
 		orientation[robot] = 1
+	orientation[robot]=1
 
-
-	m_v_linear, m_v_angular = purple_curve_control(vector, orientation[robot], m_v_angular, m_v_linear)
+	m_v_linear, m_v_angular = purple_curve_control(vector, orientation[robot], m_v_angular, m_v_linear, robot)
 	
 	error_magnitude = sqrt(vector[1]**2+vector[0]**2)
 	radius_tolerance = 0.1
