@@ -21,7 +21,7 @@ def control_system_type(data):
 
 		relative_target = convertTargetPositions(data.x[robot],data.y[robot], allies_x[robot], allies_y[robot], allies_th[robot]);
 		if data.control_options[robot] ==  control_options.position:
-			speeds.linear_vel[robot], speeds.angular_vel[robot] = position_control(relative_target)
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = position_control(relative_target, robot)
 		if data.control_options[robot] == control_options.pose:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_control(relative_target, data.th[robot], allies_th[robot])
 		if data.control_options[robot] == control_options.pose_line:
@@ -42,7 +42,6 @@ def control_system_type(data):
 		
 		if 1<=int(data.u[robot])<=4:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = special_movements(data.u[robot])
-			speeds.angular_vel[robot]=1
 		#if data.control_options[robot] == control_options.special_movements:
 		#	speeds.linear_vel[robot], speeds.angular_vel[robot] = special_movements(data.u[robot])
 def saturate(u,w):
