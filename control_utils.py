@@ -55,7 +55,7 @@ def fast_purple_curve(vector, orientation,m_v_angular,m_v_linear,robot_angle=0, 
 	error_angle = calculateErrorAngle(vector[1], vector[0],orientation)
 
 	scaling_linear = 1;
-	scaling_angular = 15;
+	scaling_angular = 5;
 	k_angular = 0.5
 	k_linear = 0.1
 
@@ -116,7 +116,7 @@ def purple_curve_control(vector, orientation,m_v_angular,m_v_linear, robot, robo
 
 	scaling_linear = 0.5;
 	scaling_angular = 14;
-	k=1.5
+	k=2
 	k_linear = 3*k
 	k_angular = 0.3*k	
 
@@ -128,7 +128,7 @@ def purple_curve_control(vector, orientation,m_v_angular,m_v_linear, robot, robo
 	v_linear = orientation*scaling_linear*purple_curve(error_magnitude*k_linear)
 	v_angular = k_angular*scaling_angular*purple_curve(error_angle*k_angular)
 
-	alpha_ang=0.2
+	alpha_ang=0.4
 	alpha_lin=0.5
 
 	output_angular = (1-alpha_ang)*v_angular + alpha_ang*m_v_angular
