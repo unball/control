@@ -1,5 +1,5 @@
 class control_options:
-    position = 1		#moves to x,y position, only forward
+    position = 1		#moves to x,y position, go forward or backwards
     pose = 2			#moves to x,y position and then turn to th, only forward
     momentum = 3		#not implemented
     angular_pose= 4		#turn to th
