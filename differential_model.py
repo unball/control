@@ -37,8 +37,8 @@ def processPosition(robot_speed):
 		motor_rotations1 = wheel_rotations1 * wheel_reduction
 		motor_rotations2 = wheel_rotations2 * wheel_reduction
 		# if one of the wheels saturates, normalize both wheels
-		if fabs(motor_rotations1) > max_motor_speed or fabs(motor_rotations2) > max_motor_speed:
-			motor_rotations1, motor_rotations2 = normalize(motor_rotations1, motor_rotations2)
+		#if fabs(motor_rotations1) > max_motor_speed or fabs(motor_rotations2) > max_motor_speed:
+		#	motor_rotations1, motor_rotations2 = normalize(motor_rotations1, motor_rotations2)
 		speeds.right_vel[robot] = motor_rotations1
 		speeds.left_vel[robot] = motor_rotations2
 

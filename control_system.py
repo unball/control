@@ -10,26 +10,33 @@ from position_control import *
 from pose_control import *
 from pose_line_control import *
 from angular_pose import *
+from special_movements import *
 
 number_of_robots = 3
 
 def control_system_type(data):
 
 	for robot in range(number_of_robots):
+
 		relative_target = convertTargetPositions(data.x[robot],data.y[robot], allies_x[robot], allies_y[robot], allies_th[robot]);
 		if data.control_options[robot] ==  control_options.position:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = position_control(relative_target)
 		if data.control_options[robot] == control_options.pose:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_control(relative_target, data.th[robot], allies_th[robot])
 		if data.control_options[robot] == control_options.pose_line:
-			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_line_control(relative_target, data.th[robot], allies_th[robot])
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_line_control(relative_target, data.th[robot], allies_th[robot], robot)
 		if data.control_options[robot] == control_options.direct_speeds:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = data.u[robot], data.w[robot]
 		if data.control_options[robot] == control_options.angular_pose:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = angular_pose(data.th[robot], allies_th[robot])
-
+		
 		speeds.linear_vel[robot], speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
-
+		
+		if 1<=int(data.u[robot])<=4:
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = special_movements(data.u[robot])
+			speeds.angular_vel[robot]=1
+		#if data.control_options[robot] == control_options.special_movements:
+		#	speeds.linear_vel[robot], speeds.angular_vel[robot] = special_movements(data.u[robot])
 def saturate(u,w):
 	wheel_reduction = 3/ 1 #motor -> wheel
 	r = 0.035 #wheel radius in m

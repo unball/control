@@ -5,3 +5,4 @@ class control_options:
     angular_pose= 4		#turn to th
     direct_speeds = 5	#override control actions
     pose_line = 6		#moves to x,y position and turn to th or (th-180), go forward or backwards
+    special_movements = 7
