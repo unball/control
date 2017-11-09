@@ -48,6 +48,38 @@ def scale_velocity(u,w,k):
 	w = r*(w1-w2)/L
 	return u,w
 
+	
+def fast_purple_curve(vector, orientation,m_v_angular,m_v_linear,robot_angle=0, desired_angle=0):
+	error_magnitude = sqrt(vector[1]**2+vector[0]**2)
+	orientation = copysign(1,vector[1])
+	error_angle = calculateErrorAngle(vector[1], vector[0],orientation)
+
+	scaling_linear = 1;
+	scaling_angular = 15;
+	k_angular = 0.5
+	k_linear = 0.1
+
+	if (error_magnitude > 0.1 and fabs(error_angle) < pi/4):
+		v_linear = orientation*scaling_linear
+	else:
+		v_linear = orientation*scaling_linear*purple_curve(error_magnitude*k_linear)
+
+	if fabs(error_angle) > pi/4:
+		v_angular = scaling_angular*0.5
+	elif fabs(error_angle) > pi/12:
+		v_angular = k_angular*scaling_angular*purple_curve(error_angle*k_angular)
+	else:
+		v_angular = 0
+
+	#alpha_ang=0.2
+	#alpha_lin=0.5
+
+	#output_angular = (1-alpha_ang)*v_angular + alpha_ang*m_v_angular
+	#output_linear = (1-alpha_lin)*v_linear + alpha_lin*m_v_linear 
+
+	#return output_linear, output_angular
+	return v_linear,v_angular
+
 def drawLine(position,angle):
 #this function receives as parameters a point and an angle and returns the line oriented to that angle that crosses that point
 	m = tan(angle)
