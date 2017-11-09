@@ -1,4 +1,5 @@
 from math import *
+import numpy as np
 
 def calculateErrorAngle(y, x, orientation):
  	if x==0 and y==0:
@@ -13,7 +14,6 @@ def calculateErrorAngle(y, x, orientation):
  	return (th)
 
 def angdiff_180(robot_angle,desired_angle):
-	#Difference between two angles, the result wrapped on the interval [-pi,pi].
 	return ((robot_angle - desired_angle + pi/2) % (pi)) - pi/2
 
 def angdiff(robot_angle,desired_angle):
@@ -47,6 +47,34 @@ def scale_velocity(u,w,k):
 	u = r*(w1+w2)/2
 	w = r*(w1-w2)/L
 	return u,w
+
+def drawLine(position,angle):
+#this function receives as parameters a point and an angle and returns the line oriented to that angle that crosses that point
+	m = tan(angle)
+	n = position[1] - position[0] * m
+	return m,n
+
+def findIntersection(line1, line2):
+#solves a linear system to find intersection between two lines
+	a = np.array([[-line1[0] , 1] , [-line2[0], 1]])
+	b = np.array([line1[1] , line2[1]])
+	intersection = np.linalg.solve(a , b)
+	return intersection
+
+def findMiddlePoint(p,q,alpha):
+#finds middle point between two points
+	x = (alpha*p[0] + (1-alpha)*q[0])
+	y = (alpha*p[1] + (1-alpha)*q[1])
+	return [x,y]
+
+def curve_control(robot_vector,desired_vector,robot_angle, desired_angle,h):
+	robot_line = drawLine(robot_vector,robot_angle)
+	desired_line = drawLine(desired_vector,desired_angle)
+	intersection = findIntersection(robot_line,desired_line)
+	middle_point = findMiddlePoint(robot_vector,desired_vector,h)
+	target = findMiddlePoint(middle_point,intersection,0.6)
+	return target
+
 
 
 def purple_curve_control(vector, orientation,m_v_angular,m_v_linear,robot_angle=0, desired_angle=0):
