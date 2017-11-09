@@ -11,6 +11,7 @@ from pose_control import *
 from pose_line_control import *
 from angular_pose import *
 from special_movements import *
+from curve_control import *
 
 number_of_robots = 3
 
@@ -29,7 +30,14 @@ def control_system_type(data):
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = data.u[robot], data.w[robot]
 		if data.control_options[robot] == control_options.angular_pose:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = angular_pose(data.th[robot], allies_th[robot])
-		
+		if data.control_options[robot] == control_options.curve_control:
+			robot_vector = [allies_x[robot], allies_y[robot]]
+			desired_vector = [data.x[robot],data.y[robot]]
+			robot_angle = allies_th[robot]
+			desired_angle = data.th[robot]
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = curve_controller(robot_vector,desired_vector, robot_angle, desired_angle)
+			print data.control_options
+			
 		speeds.linear_vel[robot], speeds.angular_vel[robot] = saturate(speeds.linear_vel[robot],speeds.angular_vel[robot])
 		
 		if 1<=int(data.u[robot])<=4:
