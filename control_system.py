@@ -34,7 +34,6 @@ def control_system_type(data):
 		
 		if 1<=int(data.u[robot])<=4:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = special_movements(data.u[robot])
-			speeds.angular_vel[robot]=1
 		#if data.control_options[robot] == control_options.special_movements:
 		#	speeds.linear_vel[robot], speeds.angular_vel[robot] = special_movements(data.u[robot])
 def saturate(u,w):
