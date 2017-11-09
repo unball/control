@@ -67,12 +67,12 @@ def findMiddlePoint(p,q,alpha):
 	y = (alpha*p[1] + (1-alpha)*q[1])
 	return [x,y]
 
-def curve_control(robot_vector,desired_vector,robot_angle, desired_angle,h):
+def curve_control(robot_vector,desired_vector,robot_angle, desired_angle, alpha):
 	robot_line = drawLine(robot_vector,robot_angle)
 	desired_line = drawLine(desired_vector,desired_angle)
 	intersection = findIntersection(robot_line,desired_line)
-	middle_point = findMiddlePoint(robot_vector,desired_vector,h)
-	target = findMiddlePoint(middle_point,intersection,0.6)
+	middle_point = findMiddlePoint(robot_vector,desired_vector,0.5)
+	target = findMiddlePoint(middle_point,intersection,alpha)
 	return target
 
 
