@@ -6,11 +6,7 @@ def calculateErrorAngle(y, x, orientation):
  		return 0
 	th = atan2(-x, y)
 
-	if orientation == 1:
-		th = atan2(-x, y)
-	else:
-		th = atan2(x, -y)
-
+	th = atan2(-orientation*x, orientation*y)
  	return (th)
 
 def angdiff_180(robot_angle,desired_angle):
