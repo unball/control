@@ -16,6 +16,7 @@ from curve_control import *
 
 number_of_robots = 3
 
+
 def control_system_type(data):
 
 	for robot in range(number_of_robots):
@@ -24,8 +25,7 @@ def control_system_type(data):
 		if data.control_options[robot] ==  control_options.position:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = position_control(relative_target, robot)
 		elif data.control_options[robot] == control_options.pose:
-			speeds.linear_vel[robot], speeds.angular_vel[robot] = fast_position_control(relative_target, robot)
-			#speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_control(relative_target, data.th[robot], allies_th[robot])
+			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_control(relative_target, data.th[robot], allies_th[robot])
 		elif data.control_options[robot] == control_options.pose_line:
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = pose_line_control(relative_target, data.th[robot], allies_th[robot], robot)
 		elif data.control_options[robot] == control_options.direct_speeds:
@@ -47,30 +47,30 @@ def control_system_type(data):
 			speeds.linear_vel[robot], speeds.angular_vel[robot] = special_movements(data.u[robot])
 		#if data.control_options[robot] == control_options.special_movements:
 		#	speeds.linear_vel[robot], speeds.angular_vel[robot] = special_movements(data.u[robot])
-def saturate(u,w):
-	wheel_reduction = 3/ 1 #motor -> wheel
-	r = 0.035 #wheel radius in m
-	L = 0.075 #distance between wheels in m
+def saturate(linear_vel,angular_vel):
+	wheel_reduction = 3/1
+	wheel_radius = 0.035
+	wheels_distance = 0.075
 
-	max_tics_per_s = 70000. #equivalent to 700 tics/10ms
+	max_tics_per_s = 70000.
 	encoder_resolution = 512.*19
 	max_motor_speed = (max_tics_per_s) / encoder_resolution
 	max_wheels_speed=max_motor_speed*2*pi/wheel_reduction
 
-	w1=(2*u + L*w)/(2*r)
-	w2=(2*u - L*w)/(2*r)
+	rigth_wheel_speed=(2*linear_vel + wheels_distance*angular_vel)/(2*wheel_radius)
+	left_wheel_speed=(2*linear_vel - wheels_distance*angular_vel)/(2*wheel_radius)
 
-	if (fabs(w1) > max_wheels_speed) or (fabs(w2) > max_wheels_speed):
-		if fabs(w1) >= fabs(w2):
-			w2 = max_wheels_speed * w2/fabs(w1)
-			w1 = max_wheels_speed * w1/fabs(w1)
-		elif fabs(w2) >= fabs(w1):
-			w1 = max_wheels_speed * w1/fabs(w2)
-			w2 = max_wheels_speed * w2/fabs(w2)
+	if (fabs(rigth_wheel_speed) > max_wheels_speed) or (fabs(left_wheel_speed) > max_wheels_speed):
+		if fabs(rigth_wheel_speed) >= fabs(left_wheel_speed):
+			left_wheel_speed = max_wheels_speed * left_wheel_speed/fabs(rigth_wheel_speed)
+			rigth_wheel_speed = max_wheels_speed * rigth_wheel_speed/fabs(rigth_wheel_speed)
+		elif fabs(left_wheel_speed) >= fabs(rigth_wheel_speed):
+			rigth_wheel_speed = max_wheels_speed * rigth_wheel_speed/fabs(left_wheel_speed)
+	left_wheel_speed = max_wheels_speed * left_wheel_speed/fabs(left_wheel_speed)
 
-	u = r*(w1+w2)/2
-	w = r*(w1-w2)/L
-	return u,w
+	linear_vel = wheel_radius*(rigth_wheel_speed+left_wheel_speed)/2
+	angular_vel = wheel_radius*(rigth_wheel_speed-left_wheel_speed)/wheels_distance
+	return linear_vel,angular_vel
 
 def convertTargetPositions(target_x, target_y, robot_x, robot_y, robot_th):
     relative_target = [target_x - robot_x, target_y - robot_y]

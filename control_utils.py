@@ -7,6 +7,7 @@ def calculateErrorAngle(y, x, orientation):
 	th = atan2(-x, y)
 
 	th = atan2(-orientation*x, orientation*y)
+	
  	return (th)
 
 def angdiff_180(robot_angle,desired_angle):
@@ -60,20 +61,10 @@ def fast_purple_curve(vector, orientation,m_v_angular,m_v_linear,robot_angle=0, 
 	else:
 		v_linear = orientation*scaling_linear*purple_curve(error_magnitude*k_linear)
 
-	#if fabs(error_angle) > pi/4:
-	#	v_angular = scaling_angular*0.1
 	if fabs(error_angle) > pi/12:
 		v_angular = k_angular*scaling_angular*purple_curve(error_angle*k_angular)
 	else:
 		v_angular = 0
-
-	#alpha_ang=0.2
-	#alpha_lin=0.5
-
-	#output_angular = (1-alpha_ang)*v_angular + alpha_ang*m_v_angular
-	#output_linear = (1-alpha_lin)*v_linear + alpha_lin*m_v_linear 
-
-	#return output_linear, output_angular
 	return v_linear,v_angular
 
 def drawLine(position,angle):
@@ -106,7 +97,6 @@ def curve_control(robot_vector,desired_vector,robot_angle, desired_angle, alpha)
 
 
 def purple_curve_control(vector, orientation,m_v_angular,m_v_linear, robot, robot_angle=0, desired_angle=0):
-	#this two lines make the transformation of cartesian to polar coordinates of the error vector
 	error_magnitude = sqrt(vector[1]**2+vector[0]**2)
 	error_angle = calculateErrorAngle(vector[1], vector[0], orientation)
 
