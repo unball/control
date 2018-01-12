@@ -91,6 +91,7 @@ allies_x = [0, 0, 0]
 allies_y = [0, 0, 0]
 allies_th = [0, 0, 0]
 
+
 def receiveGlobalPositions(data):
     for robot in range(number_of_robots):
         allies_x[robot] = data.x[robot]
