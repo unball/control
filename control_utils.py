@@ -4,7 +4,6 @@ import numpy as np
 def calculateErrorAngle(y, x, orientation):
  	if x==0 and y==0:
  		return 0
-	th = atan2(-x, y)
 
 	th = atan2(-orientation*x, orientation*y)
  	return (th)
@@ -77,7 +76,6 @@ def fast_purple_curve(vector, orientation,m_v_angular,m_v_linear,robot_angle=0, 
 	return v_linear,v_angular
 
 def drawLine(position,angle):
-#this function receives as parameters a point and an angle and returns the line oriented to that angle that crosses that point
 	m = tan(angle)
 	n = position[1] - position[0] * m
 	return m,n
