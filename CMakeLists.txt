@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(control)
 
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
@@ -11,6 +12,16 @@ find_package(catkin REQUIRED COMPONENTS
   rosserial_client
   joy
 )
+
+add_definitions (-std=c++11)
+
+find_package(Boost REQUIRED COMPONENTS system)
+
+add_message_files(DIRECTORY msg FILES
+  robots_speeds_msg.msg)
+generate_messages(DEPENDENCIES std_msgs)
+
+catkin_package()
 
 
 include_directories(
@@ -28,7 +39,9 @@ link_directories(
 )
 
 
-catkin_package()
 
 catkin_install_python(PROGRAMS control_system.py
                       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+add_executable(control control.cpp)
+target_link_libraries(control ${catkin_LIBRARIES})
