@@ -1,8 +1,16 @@
-#include "stdio.h"
 #include "iostream"
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include "control/robots_speeds_msg.h"
+#include "strategy/strategy_output_msg.h"
+
+using namespace std;
+
+void printMessage(const strategy::strategy_output_msg::ConstPtr &msg_v)
+{
+	strategy::strategy_output_msg message = *msg_v;
+	cout << message.x[1] << endl;
+}
 
 int main(int argc, char **argv){
 
@@ -11,6 +19,7 @@ int main(int argc, char **argv){
 	ros::NodeHandle n;
 	ros::Publisher publisher = n.advertise<control::robots_speeds_msg>("robots_speeds",1);
 	ros::Rate loop_rate(10);
+	ros::Subscriber subscriber = n.subscribe("strategy_output_topic", 1, printMessage);
 
 	int count = 0;
 	while (ros::ok())
@@ -27,6 +36,5 @@ int main(int argc, char **argv){
 		loop_rate.sleep();
 		++count;
 	}
-
 	return 0;
 }
