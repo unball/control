@@ -43,5 +43,5 @@ link_directories(
 catkin_install_python(PROGRAMS control_system.py
                       DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-add_executable(control control.cpp)
-target_link_libraries(control ${catkin_LIBRARIES})
+add_executable(controller controller.cpp)
+target_link_libraries(controller ${catkin_LIBRARIES})
