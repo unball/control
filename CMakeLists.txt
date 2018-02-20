@@ -38,10 +38,7 @@ link_directories(
   ${SDFormat_LIBRARY_DIRS}
 )
 
+add_executable(controller main.cpp
+  strategy/strategy.cpp)
 
-
-catkin_install_python(PROGRAMS control_system.py
-                      DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-add_executable(controller controller.cpp)
 target_link_libraries(controller ${catkin_LIBRARIES})
