@@ -38,7 +38,7 @@ link_directories(
   ${SDFormat_LIBRARY_DIRS}
 )
 
-add_executable(controller main.cpp
+add_executable(planning_node main.cpp
   strategy/strategy.cpp)
 
-target_link_libraries(controller ${catkin_LIBRARIES})
+target_link_libraries(planning_node ${catkin_LIBRARIES})

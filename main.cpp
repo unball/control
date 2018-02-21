@@ -36,7 +36,7 @@ void receiveMeasurementMessage(const measurement_system::measurement_msg::ConstP
 
 void isOk()
 {
-	cout << ball.x << endl;
+	cout << robot[0].control << endl;
 }
 
 int main(int argc, char **argv){
@@ -47,6 +47,9 @@ int main(int argc, char **argv){
 	ros::Publisher publisher = n.advertise<control::robots_speeds_msg>("robots_speeds",1);
 	ros::Rate loop_rate(10);
 	ros::Subscriber measurementSystemSubscriber = n.subscribe("measurement_system_topic",1,receiveMeasurementMessage);
+
+	Strategy strategy;
+	robot[0] = strategy.go_to_ball(robot[0],ball);
 
 	int count = 0;
 	while (ros::ok())
