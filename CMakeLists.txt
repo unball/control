@@ -39,6 +39,7 @@ link_directories(
 )
 
 add_executable(planning_node main.cpp
-  strategy/strategy.cpp)
+  strategy/strategy.cpp 
+  control/control.cpp)
 
 target_link_libraries(planning_node ${catkin_LIBRARIES})

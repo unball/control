@@ -3,6 +3,7 @@
 #include "control/robots_speeds_msg.h"
 #include "measurement_system/measurement_msg.h"
 #include "strategy/strategy.h"
+#include "control/control.h"
 #include "include/robot.h"
 #include "include/ball.h"
 
@@ -10,6 +11,9 @@ using namespace std;
 
 measurement_system::measurement_msg position;
 control::robots_speeds_msg robots_speeds;
+
+Strategy strategy;
+Control controller;
 
 Robot robot[3];
 Ball ball;
@@ -36,7 +40,7 @@ void receiveMeasurementMessage(const measurement_system::measurement_msg::ConstP
 
 void isOk()
 {
-	cout << robot[0].control << endl;
+	cout << robot[0].w << endl;
 }
 
 int main(int argc, char **argv){
@@ -48,13 +52,18 @@ int main(int argc, char **argv){
 	ros::Rate loop_rate(10);
 	ros::Subscriber measurementSystemSubscriber = n.subscribe("measurement_system_topic",1,receiveMeasurementMessage);
 
-	Strategy strategy;
-	robot[0] = strategy.go_to_ball(robot[0],ball);
 
 	int count = 0;
 	while (ros::ok())
 	{
-		isOk();
+	//	isOk();
+	robot[0] = strategy.go_to_ball(robot[0],ball);
+	robot[0] = controller.control(robot[0]);
+		for (int i=0;i<3;i++)
+		{
+			robots_speeds.linear_vel[i] = robot[i].u;
+			robots_speeds.angular_vel[i] = robot[i].w;
+		}
 		publisher.publish(robots_speeds);
 		ros::spinOnce();
 		loop_rate.sleep();
