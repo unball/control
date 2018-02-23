@@ -4,40 +4,41 @@
 #include <math.h>
 #include <iostream>
 
-float pi = 3.14159265358;
+Control::Vector Control::relative_target(Robot robot)
+{	
+	Control::Vector vector;
 
-float Control::angdiff(float alpha, float beta)
-{
-	float diff = alpha - beta;
-	diff = fmod((diff + pi/2),pi) - pi/2;
+	float x = robot.target_x - robot.x;
+	float y = robot.target_y - robot.y;
 
-	return diff;
+    vector.y = x*cos(robot.th) + y*sin(robot.th);
+	vector.x = x*sin(robot.th) - y*cos(robot.th);
+
+	return vector;
 }
 
 
-float Control::error_angle(Robot robot)
+float Control::error_angle(Vector vector)
 {
-	float angle = atan2((robot.y),(robot.x));
-	float target_angle = atan2((robot.target_y),(robot.target_y));
-
-	float angle_error = angdiff(target_angle,angle);
+	float angle_error = atan2(-vector.x,vector.y);
 
 	return angle_error;
 }
 
-float Control::error_distance(Robot robot)
+float Control::error_distance(Vector vector)
 {
-	float distance = pow((pow((robot.target_x - robot.x),2) + pow((robot.target_y - robot.y),2)),(1/2));
+	float distance = pow((pow(vector.x,2) + pow(vector.y,2)),(1/2));
 	return distance; 
 }
 
 Robot Control::position_control(Robot robot)
-{
-	float distance_error = error_distance(robot);
-	float angle_error = error_angle(robot);
+{	
+	Vector target = relative_target(robot);
+	float distance_error = error_distance(target);
+	float angle_error = error_angle(target);
 
-	robot.u = distance_error;
-	robot.w = angle_error;
+	robot.u = 0;//distance_error;
+	robot.w = 0;//angle_error;
 
 	std::cout<<angle_error<<std::endl;
 

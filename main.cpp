@@ -25,7 +25,7 @@ void receiveMeasurementMessage(const measurement_system::measurement_msg::ConstP
 	for (int i=0; i<3; i++)
 	{
 		robot[i].x = position.x[i];
-		robot[i].y = position.x[i];
+		robot[i].y = position.y[i];
 		robot[i].th = position.th[i];
 	}
 
