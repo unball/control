@@ -2,7 +2,17 @@
 #include "ball.h"
 #include "control.h"
 #include <math.h>
+#include <fstream>
 #include <iostream>
+#include "yaml-cpp/yaml.h"
+
+void Control::get_constants()
+{
+	std::ifstream fin("config/control.yaml");
+    YAML::Parser parser(fin);
+
+    
+}
 
 Control::Vector Control::relative_target(Robot robot)
 {	
@@ -18,9 +28,9 @@ Control::Vector Control::relative_target(Robot robot)
 }
 
 
-float Control::error_angle(Vector vector)
+float Control::error_angle(Vector vector, float orientation)
 {
-	float angle_error = atan2(-vector.x,vector.y);
+	float angle_error = atan2(-orientation*vector.x,orientation*vector.y);
 
 	return angle_error;
 }
@@ -34,23 +44,23 @@ float Control::error_distance(Vector vector)
 Robot Control::position_control(Robot robot)
 {	
 	Vector target = relative_target(robot);
+	float orientation = copysignf(1,target.y);
 	float distance_error = error_distance(target);
-	float angle_error = error_angle(target);
+	float angle_error = error_angle(target,orientation);
 
-	robot.u = 0;//distance_error;
-	robot.w = 0;//angle_error;
-
-	std::cout<<angle_error<<std::endl;
+	robot.u = distance_error*orientation;
+	robot.w = angle_error;
 
 	return robot;
 }
 
-Robot Control::control(Robot robot)
+void Control::control(Robot robot[3])
 {
-	if (robot.control == POSITION)
+	for (int i=0;i<3;i++)
 	{
-		robot = position_control(robot);
+		if (robot[i].control == POSITION)
+		{
+			robot[i] = position_control(robot[i]);
+		}
 	}
-
-	return robot;
 }

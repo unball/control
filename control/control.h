@@ -8,18 +8,18 @@ class Control
 {
 	private:
 		Robot robot;
-		float alpha, beta;
-		float x, y;
+		float orientation;
 		struct Vector {float x,y;};
 		Vector vector;
 
+		void get_constants();
 		Vector relative_target(Robot robot);
-		float error_angle(Vector vector);
+		float error_angle(Vector vector, float orientation);
 		float error_distance(Vector vector);
 		Robot position_control(Robot robot);
 
 	public:
-		Robot control(Robot robot);
+		void control(Robot robot[3]);
 
 };
 #endif

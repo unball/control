@@ -10,7 +10,8 @@ class Strategy
 		Robot robot;
 		Ball ball;
 
-	public:
 		Robot go_to_ball(Robot robot, Ball ball);
+	public:
+		void strategy(Robot robot[3], Ball ball);
 };
 #endif

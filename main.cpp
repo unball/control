@@ -1,5 +1,6 @@
 #include "iostream"
 #include "ros/ros.h"
+#include "vector"
 #include "control/robots_speeds_msg.h"
 #include "measurement_system/measurement_msg.h"
 #include "strategy/strategy.h"
@@ -57,8 +58,8 @@ int main(int argc, char **argv){
 	while (ros::ok())
 	{
 	//	isOk();
-	robot[0] = strategy.go_to_ball(robot[0],ball);
-	robot[0] = controller.control(robot[0]);
+	strategy.strategy(robot,ball);
+	controller.control(robot);
 		for (int i=0;i<3;i++)
 		{
 			robots_speeds.linear_vel[i] = robot[i].u;

@@ -43,3 +43,4 @@ add_executable(planning_node main.cpp
   control/control.cpp)
 
 target_link_libraries(planning_node ${catkin_LIBRARIES})
+target_link_libraries(planning_node yaml-cpp)
