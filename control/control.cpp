@@ -2,16 +2,14 @@
 #include "ball.h"
 #include "control.h"
 #include <math.h>
+#include "ros/ros.h"
 #include <fstream>
 #include <iostream>
-#include "yaml-cpp/yaml.h"
 
 void Control::get_constants()
 {
-	std::ifstream fin("config/control.yaml");
-    YAML::Parser parser(fin);
-
-    
+	ros::param::get("/position/u",k_u);
+	ros::param::get("/position/w",k_w);
 }
 
 Control::Vector Control::relative_target(Robot robot)
@@ -48,8 +46,10 @@ Robot Control::position_control(Robot robot)
 	float distance_error = error_distance(target);
 	float angle_error = error_angle(target,orientation);
 
-	robot.u = distance_error*orientation;
-	robot.w = angle_error;
+	get_constants();
+
+	robot.u = distance_error*orientation*k_u;
+	robot.w = angle_error*k_w;
 
 	return robot;
 }

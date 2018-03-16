@@ -7,6 +7,7 @@
 #include "control/control.h"
 #include "include/robot.h"
 #include "include/ball.h"
+#include "joystick/joystick.h"
 
 using namespace std;
 
@@ -15,9 +16,12 @@ control::robots_speeds_msg robots_speeds;
 
 Strategy strategy;
 Control controller;
+Joystick joystick;
 
 Robot robot[3];
 Ball ball;
+
+bool using_joystick;
 
 void receiveMeasurementMessage(const measurement_system::measurement_msg::ConstPtr &msg_m)
 {
@@ -36,7 +40,6 @@ void receiveMeasurementMessage(const measurement_system::measurement_msg::ConstP
 	ball.y_pred = position.ball_y_pred;
 	ball.x_walls = position.ball_x_walls;
 	ball.y_walls = position.ball_y_walls;
-
 }
 
 void isOk()
@@ -46,20 +49,36 @@ void isOk()
 
 int main(int argc, char **argv){
 
-	ros::init(argc, argv, "control_system_node");
+	ros::init(argc, argv, "planning_node");
 
 	ros::NodeHandle n;
 	ros::Publisher publisher = n.advertise<control::robots_speeds_msg>("robots_speeds",1);
 	ros::Rate loop_rate(10);
-	ros::Subscriber measurementSystemSubscriber = n.subscribe("measurement_system_topic",1,receiveMeasurementMessage);
 
+	ros::param::get("system/using_joystick", using_joystick);
+
+	ros::Subscriber subscriber = n.subscribe("measurement_system_topic",1,receiveMeasurementMessage);
+
+	if (using_joystick)
+	{
+		subscriber = n.subscribe("joy", 1, &Joystick::receiveJoystickMessage, &joystick);
+	}
 
 	int count = 0;
 	while (ros::ok())
 	{
 	//	isOk();
-	strategy.strategy(robot,ball);
-	controller.control(robot);
+		if (using_joystick)
+		{
+			joystick.joystick(robot);
+		}
+
+		else
+		{
+			strategy.strategy(robot,ball);
+			controller.control(robot);
+		}
+
 		for (int i=0;i<3;i++)
 		{
 			robots_speeds.linear_vel[i] = robot[i].u;

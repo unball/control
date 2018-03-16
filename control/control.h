@@ -9,6 +9,7 @@ class Control
 	private:
 		Robot robot;
 		float orientation;
+		float k_u, k_w;
 		struct Vector {float x,y;};
 		Vector vector;
 
