@@ -13,7 +13,7 @@ class Control
 		struct Vector {float x,y;};
 		Vector vector;
 
-		void get_constants();
+		Robot get_constants(Robot robot);
 		Vector relative_target(Robot robot);
 		float error_angle(Vector vector, float orientation);
 		float error_distance(Vector vector);

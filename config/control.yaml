@@ -1,3 +1,11 @@
-position:
- u: 0.1
- w: 1
+robot0:
+  u: 0.5
+  w: 5
+
+robot1:
+  u: 0.5
+  w: 5
+
+robot2:
+  u: 0.5
+  w: 5

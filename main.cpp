@@ -11,7 +11,7 @@
 
 using namespace std;
 
-measurement_system::measurement_msg position;
+measurement_system::measurement_msg positions;
 control::robots_speeds_msg robots_speeds;
 
 Strategy strategy;
@@ -25,21 +25,22 @@ bool using_joystick;
 
 void receiveMeasurementMessage(const measurement_system::measurement_msg::ConstPtr &msg_m)
 {
-	position = *msg_m;
+	positions = *msg_m;
 
 	for (int i=0; i<3; i++)
 	{
-		robot[i].x = position.x[i];
-		robot[i].y = position.y[i];
-		robot[i].th = position.th[i];
+		robot[i].x = positions.x[i];
+		robot[i].y = positions.y[i];
+		robot[i].th = positions.th[i];
+		robot[i].id = i;
 	}
 
-	ball.x = position.ball_x;
-	ball.y = position.ball_y;
-	ball.x_pred = position.ball_x_pred;
-	ball.y_pred = position.ball_y_pred;
-	ball.x_walls = position.ball_x_walls;
-	ball.y_walls = position.ball_y_walls;
+	ball.x = positions.ball_x;
+	ball.y = positions.ball_y;
+	ball.x_pred = positions.ball_x_pred;
+	ball.y_pred = positions.ball_y_pred;
+	ball.x_walls = positions.ball_x_walls;
+	ball.y_walls = positions.ball_y_walls;
 }
 
 void isOk()
