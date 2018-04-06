@@ -77,7 +77,7 @@ int main(int argc, char **argv){
 		else
 		{
 			strategy.strategy(robot,ball);
-			controller.control(robot);
+			controller.start(robot);
 		}
 
 		for (int i=0;i<3;i++)

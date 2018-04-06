@@ -12,15 +12,19 @@ class Control
 		float k_u, k_w;
 		struct Vector {float x,y;};
 		Vector vector;
+		const float  pi=3.14159265358979;
+		float trigger_down = 120*(2*pi/360);
+		float trigger_up = 60*(2*pi/360);
 
 		Robot get_constants(Robot robot);
+		int orientation_trigger(Vector vector);
 		Vector relative_target(Robot robot);
 		float error_angle(Vector vector, float orientation);
 		float error_distance(Vector vector);
-		Robot position_control(Robot robot);
+		Robot motion_control(Robot robot);
 
 	public:
-		void control(Robot robot[3]);
+		void start(Robot robot[3]);
 
 };
 #endif

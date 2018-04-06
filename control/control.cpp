@@ -6,6 +6,8 @@
 #include <fstream>
 #include <iostream>
 
+int orientation = 1;
+
 Robot Control::get_constants(Robot robot)
 {
 	std::string parameter_u, parameter_w;
@@ -24,8 +26,8 @@ Control::Vector Control::relative_target(Robot robot)
 
 	float x = robot.target_x - robot.x;
 	float y = robot.target_y - robot.y;
-
-  vector.y = x*cos(robot.th) + y*sin(robot.th);
+	
+	vector.y = x*cos(robot.th) + y*sin(robot.th);
 	vector.x = x*sin(robot.th) - y*cos(robot.th);
 
 	return vector;
@@ -45,28 +47,48 @@ float Control::error_distance(Vector vector)
 	return distance;
 }
 
-Robot Control::position_control(Robot robot)
+Robot Control::motion_control(Robot robot)
 {
 	Vector target = relative_target(robot);
-	float orientation = copysignf(1,target.y);
+	orientation = orientation_trigger(target);
 	float distance_error = error_distance(target);
 	float angle_error = error_angle(target,orientation);
 
 	robot = get_constants(robot);
 
-	robot.u = distance_error*orientation*robot.k_u;
+	robot.u = distance_error*orientation*robot.k_u*cos(angle_error);
 	robot.w = angle_error*robot.k_w;
 
 	return robot;
 }
 
-void Control::control(Robot robot[3])
+int Control::orientation_trigger(Vector vector)
+{
+
+	if (orientation == 1)
+	{
+		if (fabs(atan2(-vector.x,vector.y)) > trigger_down)
+		{
+			orientation = -1;
+		} 
+	}
+	else
+	{
+		if (fabs(atan2(-vector.x,vector.y)) < trigger_up)
+		{
+			orientation = 1;
+		}
+	}
+	return orientation;
+}
+
+void Control::start(Robot robot[3])
 {
 	for (int i=0;i<3;i++)
 	{
 		if (robot[i].control == position)
 		{
-			robot[i] = position_control(robot[i]);
+			robot[i] = motion_control(robot[i]);
 		}
 	}
 }
