@@ -1,5 +1,6 @@
 <launch>
   <rosparam command="load" file="$(find control)/config/control.yaml"/>
   <rosparam command="load" file="$(find control)/config/system.yaml"/>
+  <rosparam command="load" file="$(find control)/config/conversions.yaml"/>
   <node name="planning_node" pkg="control" type="planning_node" output="screen"/>
 </launch>

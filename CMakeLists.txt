@@ -18,7 +18,8 @@ add_definitions (-std=c++11)
 find_package(Boost REQUIRED COMPONENTS system)
 
 add_message_files(DIRECTORY msg FILES
-  robots_speeds_msg.msg)
+  robots_speeds_msg.msg
+  comm_msg.msg)
 generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package()
@@ -41,7 +42,8 @@ link_directories(
 add_executable(planning_node main.cpp
   strategy/strategy.cpp 
   control/control.cpp
-  joystick/joystick.cpp)
+  joystick/joystick.cpp
+  speed_conversion/speed_conversion.cpp)
 
 target_link_libraries(planning_node ${catkin_LIBRARIES})
 target_link_libraries(planning_node yaml-cpp)

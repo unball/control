@@ -1,0 +1,23 @@
+robot0:
+ wheel_reduction: 3
+ r: 0.035
+ L: 0.075
+ max_tics_per_s: 70000
+ encoder_resolution: 9728
+ conversion: 97.28
+
+robot1:
+ wheel_reduction: 3
+ r: 0.035
+ L: 0.075
+ max_tics_per_s: 70000
+ encoder_resolution: 9728
+ conversion: 97.28
+
+robot2:
+ wheel_reduction: 3
+ r: 0.035
+ L: 0.075
+ max_tics_per_s: 70000
+ encoder_resolution: 9728
+ conversion: 97.28

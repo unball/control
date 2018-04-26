@@ -2,9 +2,11 @@
 #include "ros/ros.h"
 #include "vector"
 #include "control/robots_speeds_msg.h"
+#include "control/comm_msg.h"
 #include "measurement_system/measurement_msg.h"
 #include "strategy/strategy.h"
 #include "control/control.h"
+#include "speed_conversion/speed_conversion.h"
 #include "include/robot.h"
 #include "include/ball.h"
 #include "joystick/joystick.h"
@@ -13,10 +15,14 @@ using namespace std;
 
 measurement_system::measurement_msg positions;
 control::robots_speeds_msg robots_speeds;
+control::comm_msg radio_topic;
 
 Strategy strategy;
 Control controller;
 Joystick joystick;
+SpeedConversion conversion;
+
+Speeds motors[3];
 
 Robot robot[3];
 Ball ball;
@@ -54,6 +60,7 @@ int main(int argc, char **argv){
 
 	ros::NodeHandle n;
 	ros::Publisher publisher = n.advertise<control::robots_speeds_msg>("robots_speeds",1);
+	ros::Publisher pub = n.advertise<control::comm_msg>("radio_topic",1);
 	ros::Rate loop_rate(10);
 
 	ros::param::get("system/using_joystick", using_joystick);
@@ -85,7 +92,17 @@ int main(int argc, char **argv){
 			robots_speeds.linear_vel[i] = robot[i].u;
 			robots_speeds.angular_vel[i] = robot[i].w;
 		}
+
+
+		for (int i=0;i<3;i++)
+		{
+			motors[i] = conversion.start(robot[i]);
+			radio_topic.MotorA[i] = motors[i].right;
+			radio_topic.MotorB[i] = motors[i].left;
+		}
+		
 		publisher.publish(robots_speeds);
+		pub.publish(radio_topic);
 		ros::spinOnce();
 		loop_rate.sleep();
 		++count;
