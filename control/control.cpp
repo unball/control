@@ -54,9 +54,7 @@ Robot Control::motion_control(Robot robot)
 	float distance_error = error_distance(target);
 	float angle_error = error_angle(target,orientation);
 
-	robot = get_constants(robot);
-
-	robot.u = distance_error*orientation*robot.k_u*cos(angle_error);
+	robot.u = sqrt(distance_error)*orientation*robot.k_u*cos(angle_error);
 	robot.w = angle_error*robot.k_w;
 
 	return robot;
@@ -82,13 +80,28 @@ int Control::orientation_trigger(Vector vector)
 	return orientation;
 }
 
+Robot Control::make_turn(Robot robot, float r)
+{
+	float angle_diff=0;
+	angle_diff =atan2(sin(robot.target_th-robot.th), cos(robot.target_th-robot.th));
+	robot.w = angle_diff*robot.k_w;
+	robot.u = robot.w*r;
+	
+	return robot;
+}
+
 void Control::start(Robot robot[3])
 {
 	for (int i=0;i<3;i++)
 	{
+		robot[i] = get_constants(robot[i]);
 		if (robot[i].control == position)
 		{
 			robot[i] = motion_control(robot[i]);
+		}
+		if (robot[i].control == turn)
+		{
+			robot[i] = make_turn(robot[i],0.03);
 		}
 	}
 }

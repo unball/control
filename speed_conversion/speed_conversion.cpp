@@ -29,7 +29,6 @@ Speeds SpeedConversion::wheels_speeds(Robot robot, Parameters p)
 	wheels.left = (-robot.u - (p.L/2)*robot.w) / p.r;
 	wheels.right = wheels.right/(2*pi);
 	wheels.left = wheels.left/(2*pi);
-
 	return wheels;
 }
 
@@ -40,10 +39,10 @@ Speeds SpeedConversion::normalize(Speeds s, float a)
 			s.left = a * s.left/fabs(s.right);
 			s.right = a * s.right/fabs(s.right);
 		}
-		else if (fabs(s.left) >= fabs(s.right))
+		else if (fabs(s.left) > fabs(s.right))
 		{
-			s.left = a * s.left/fabs(s.left);
 			s.right = a * s.right/fabs(s.left);
+			s.left = a * s.left/fabs(s.left);
 		}
 
 	return s;
@@ -52,9 +51,9 @@ Speeds SpeedConversion::normalize(Speeds s, float a)
 Speeds SpeedConversion::motor_speeds(Speeds wheels, Parameters p)
 {
 	Speeds motor;
-	motor.right = p.wheel_reduction * wheels.right;
-	motor.left = p.wheel_reduction * wheels.left;
-	float max_motor_speed = p.max_tics_per_s/p.encoder_resolution;
+	motor.right = p.wheel_reduction * wheels.right * p.encoder_resolution/100;
+	motor.left = p.wheel_reduction * wheels.left * p.encoder_resolution/100;
+	float max_motor_speed = p.max_tics_per_s/100;
 
 	if (fabs(motor.right) > max_motor_speed || fabs(motor.left) > max_motor_speed)
 	{
