@@ -17,34 +17,36 @@ Robot Strategy::go_to_ball(Robot robot, Ball ball)
 Robot Strategy::olympic_lap(Robot robot)
 {
 	float next_target_x, next_target_y;
-	if(robot.target_y == 0.5 && robot.target_x ==0.5)
+	if(robot.target_y == 0.3 && robot.target_x == 0.3)
 	{
-		next_target_x = -0.5;
-		next_target_y = 0.5;
+		next_target_x = -0.3;
+		next_target_y = 0.3;
 
 	}
-	else if(robot.target_y == 0.5 && robot.target_x == -0.5)
+	else if(robot.target_y == 0.3 && robot.target_x == -0.3)
 	{
-		next_target_x = -0.5;
-		next_target_y = -0.5;
+		next_target_x = -0.3;
+		next_target_y = -0.3;
 
 	}
-	else if(robot.target_y == -0.5 && robot.target_x == -0.5)
+	else if(robot.target_y == -0.3 && robot.target_x == -0.3)
 	{
-		next_target_y = -0.5;
-		next_target_x = 0.5;
+		next_target_y = -0.3;
+		next_target_x = 0.3;
 
 	}
-	else if(robot.target_y == -0.5 && robot.target_x == 0.5)
+	else if(robot.target_y == -0.3 && robot.target_x == 0.3)
 	{
-		next_target_y = 0.5;
-		next_target_x = 0.5;
+		next_target_y = 0.3;
+		next_target_x = 0.3;
 		
 	}
 	else
 	{
-		robot.target_y = 0.5;
-		robot.target_x = 0.5;
+		robot.target_y = 0.3;
+		robot.target_x = 0.3;
+		next_target_x = 0.3;
+		next_target_y = 0.3;
 	
 	}
 	if(fabs(robot.y - robot.target_y) <=0.1 && fabs(robot.x - robot.target_x) <=0.1)

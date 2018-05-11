@@ -61,7 +61,7 @@ int main(int argc, char **argv){
 	ros::NodeHandle n;
 	ros::Publisher publisher = n.advertise<control::robots_speeds_msg>("robots_speeds",1);
 	ros::Publisher pub = n.advertise<control::comm_msg>("radio_topic",1);
-	ros::Rate loop_rate(10);
+	ros::Rate loop_rate(100);
 
 	ros::param::get("system/using_joystick", using_joystick);
 
